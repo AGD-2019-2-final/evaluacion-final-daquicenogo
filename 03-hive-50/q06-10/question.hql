@@ -39,5 +39,13 @@ LOAD DATA LOCAL INPATH 'tbl1.csv' INTO TABLE tbl1;
 --
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
+drop table if exists datos;
+CREATE TABLE datos AS
+select collect_list(UPPER(nueva)) from tbl0 
+LATERAL VIEW explode(c5) explod AS nueva
+group by c1;
 
 
+INSERT OVERWRITE LOCAL DIRECTORY 'output'
+ROW FORMAT DELIMITED COLLECTION ITEMS TERMINATED BY ':'
+select * from datos;

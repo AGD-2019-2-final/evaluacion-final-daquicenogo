@@ -10,3 +10,14 @@ fs -rm -f -r output;
 -- 
 
 
+-- carga de datos y realiza consulta
+d = LOAD 'data.tsv' AS (letra:CHARARRAY, fecha:CHARARRAY, numero:INT);
+t1 = ORDER d BY letra, numero;
+--r = FOREACH t1 GENERATE group, COUNT(d.numero);
+
+-- escribe el archivo de salida
+STORE t1 INTO 'output';
+
+-- copia los archivos del HDFS al sistema local
+--fs -get /datalake/evaluacion-final-wssanchezm/02-pig-50/q02-10/output/.
+

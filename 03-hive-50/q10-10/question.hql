@@ -24,3 +24,12 @@ LOAD DATA LOCAL INPATH 'data.tsv' INTO TABLE t0;
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
 
+drop table if exists segunda;
+
+create table segunda as select b.nueva, count(1) from (select nueva, valor 
+from t0 LATERAL VIEW explode(c3) explod AS nueva,valor) b
+group by b.nueva;
+
+INSERT OVERWRITE LOCAL DIRECTORY 'output'
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+select * from segunda;

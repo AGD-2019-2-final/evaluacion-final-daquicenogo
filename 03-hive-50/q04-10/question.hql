@@ -39,4 +39,11 @@ LOAD DATA LOCAL INPATH 'tbl1.csv' INTO TABLE tbl1;
 --
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
+drop table if exists datos;
+CREATE TABLE datos AS
+select distinct letra from tbl0 LATERAL VIEW explode(c5) adTable AS letra ;
 
+
+INSERT OVERWRITE LOCAL DIRECTORY 'output'
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+select * from datos;

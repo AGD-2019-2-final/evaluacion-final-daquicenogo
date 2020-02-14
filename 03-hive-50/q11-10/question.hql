@@ -24,3 +24,10 @@ LOAD DATA LOCAL INPATH 'data.tsv' INTO TABLE t0;
 --
 
 
+drop table if exists segunda;
+
+create table segunda as select c1, size(c2) cantidad1, size(c3) cantidad3 from t0;
+
+INSERT OVERWRITE LOCAL DIRECTORY 'output'
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+select * from segunda;

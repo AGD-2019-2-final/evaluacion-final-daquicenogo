@@ -42,3 +42,12 @@ LOAD DATA LOCAL INPATH 'tbl1.csv' INTO TABLE tbl1;
 --
 
 
+drop table if exists datos;
+CREATE TABLE datos AS
+select c2, sum(valor) from tbl0 LATERAL VIEW explode(c6) explod AS nueva, valor
+group by c2;
+
+
+INSERT OVERWRITE LOCAL DIRECTORY 'output'
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+select * from datos;

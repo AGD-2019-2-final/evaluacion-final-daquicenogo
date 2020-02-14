@@ -39,3 +39,23 @@ LOAD DATA LOCAL INPATH 'tbl1.csv' INTO TABLE tbl1;
 --
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
+
+drop table if exists segunda;
+
+
+create table segunda as select c1,nueva, valor 
+from tbl1 LATERAL VIEW explode(c4) explod AS nueva,valor
+group by c1, nueva, valor;
+
+drop table if exists datos;
+
+CREATE TABLE datos AS
+select r.c1, r.c2, s.valor from tbl0 r
+join 
+segunda s
+ON s.c1=r.c1 and 
+r.c2=s.nueva;
+
+INSERT OVERWRITE LOCAL DIRECTORY 'output'
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+select * from datos;

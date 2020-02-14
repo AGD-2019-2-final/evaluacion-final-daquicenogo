@@ -27,4 +27,18 @@ LOAD DATA LOCAL INPATH 'data.tsv' INTO TABLE t0;
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
 
+--%%hive
 
+drop table if exists segunda;
+
+CREATE TABLE segunda AS
+SELECT clave, letra, COUNT(1) FROM 
+
+(SELECT clave, c3 FROM t0 LATERAL VIEW explode(c2) clave AS clave) t0 
+LATERAL VIEW explode(c3) pares AS letra,numero
+GROUP BY clave, letra
+ORDER BY clave, letra;
+
+INSERT OVERWRITE LOCAL DIRECTORY 'output'
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+SELECT * FROM segunda;

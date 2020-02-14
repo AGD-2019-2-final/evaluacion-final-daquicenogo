@@ -28,7 +28,7 @@
 -- 
 fs -rm -f -r output;
 --
-u = LOAD 'data.csv' USING PigStorage(',') 
+d = LOAD 'data.csv' USING PigStorage(',') 
     AS (id:int, 
         firstname:CHARARRAY, 
         surname:CHARARRAY, 
@@ -38,3 +38,13 @@ u = LOAD 'data.csv' USING PigStorage(',')
 --
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
+
+t1 = FOREACH d GENERATE $2, UPPER($2), LOWER($2);
+r = ORDER t1 BY $0;
+--r = LIMIT t2 5;
+
+-- escribe el archivo de salida
+STORE r INTO 'output' USING PigStorage(',');
+
+-- copia los archivos del HDFS al sistema local
+--fs -get /datalake/evaluacion-final-wssanchezm/02-pig-50/q11-10/output/.
